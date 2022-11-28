@@ -13,6 +13,8 @@ from schemas.job_schema import JobToDatabaseSchema, JobFromDatabaseSchema, JobTo
 
 
 class Executor(BaseModel):
+    email_address: str = 'test@test.test'
+
     DATABASE_CREDENTIALS: Optional[Union[str]] = 'sqlite:///db'
     SQLALCHEMY_SESSION: Optional[Any] = None
     SQLALCHEMY_ENGINE: Optional[Any] = None
@@ -26,13 +28,22 @@ class Executor(BaseModel):
         return values
 
     def execute_job(self, job_instance: JobFromDatabaseSchema):
-        os.system(job_instance.console_command)
+        result = os.popen(job_instance.console_command).read()
+        self.send_email(result)
         with self.SQLALCHEMY_SESSION() as session:
             database_object = session.query(JobModel).where(JobModel.id == job_instance.id).first()
             setattr(database_object, "executed_at", datetime.datetime.now())
             setattr(database_object, "completed", True)
             session.flush()
             session.commit()
+
+
+
+    def send_email(self, result):
+        """Функция по отправке результата на почту. TODO"""
+        #self.email_address -> куда отправить
+        #result -> тело письма
+        pass
 
 
 class JobScheduler(BaseModel):
