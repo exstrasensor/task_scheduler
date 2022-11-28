@@ -1,4 +1,3 @@
-#Scheduler
 ## Запуск проекта
 ```bash
 poetry shell
@@ -34,7 +33,7 @@ python executor.py # Запустить цикл, который будет мо
  python main.py -u user_1 -a scheduled -l 5
 ```
 
-###TODO:
+##TODO:
 1) Добавить удаление tasks
 2) В executor используется while True с паузой в 1 сек. на мониторинг тасков и последовательное исполнение.
 Можно придумать что-нибудь более гибкое
